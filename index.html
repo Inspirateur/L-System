@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+    <link rel="stylesheet" href="style.css"/>
+	<title>L-System</title>
+</head>
+
+<body>
+	<canvas id="window" width="800", height="600", style="border:1px solid #000;"></canvas>
+    <div id="param" class="sub">
+        <h3>Parameters</h3>
+		<div id="meta">
+			angle <input type="number" name="angle" value="90" oninput="updateParam()" id="angle"/>
+			order <input type="number" name="order" value="5" oninput="updateParam()" id="order"/> <br/>
+		</div>
+		<div id="rules">
+			<div class="rule">
+				S → <input type="text" name="rule" oninput="updateHTMLRule('S')" id="S"/> <br/>
+			</div>
+		</div>
+		<div id="modes">
+			<button type="button" id="fast" onclick="build(true)">FAST</button><button type="button" id="slow" onclick="build(false)">SLOW</button>
+		</div>
+    </div>
+	<div id="preset" class="sub">
+		<h3>Presets</h3>
+		<div id="presetlist">
+		</div>
+	</div>
+	<script src="util.js"></script>
+	<script src="virtualctx.js"></script>
+    <script src="turtle.js"></script>
+	<script src="drawing.js"></script>
+    <script src="lsystem.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
