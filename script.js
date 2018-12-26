@@ -95,13 +95,15 @@ function createHTMLRule(token) {
 }
 
 function removeHTMLRule(token) {
-    // To make sure every reference is removed
-    writeHTMLRule(token, "");
-    // Remove the HTML field
-    let inputField = document.getElementById(token);
-    if(inputField != null) {
-        let ruleDiv = inputField.parentNode;
-        document.getElementById("rules").removeChild(ruleDiv);
+    if(token != 'S') {
+        // To make sure every reference is removed
+        writeHTMLRule(token, "");
+        // Remove the HTML field
+        let inputField = document.getElementById(token);
+        if(inputField != null) {
+            let ruleDiv = inputField.parentNode;
+            document.getElementById("rules").removeChild(ruleDiv);
+        }
     }
 }
 
