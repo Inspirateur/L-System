@@ -1,8 +1,9 @@
-let tokenInRule = {};
-let ruleHasToken = {};
 let canvas = document.getElementById("window");
 let ctx = canvas.getContext("2d");
+let tokenInRule = {};
+let ruleHasToken = {};
 let fastlock = false;
+let previousLines = 1000;
 
 //TODO: Implement a lock fast-slow and redraw upon angle/order modification
 function build(fast) {
@@ -11,7 +12,7 @@ function build(fast) {
     // TODO: BUILD RULES OBJECT FROM THE HTML RULE FIELDS AND CALL LSYSTEM
     let rules = {};
     // get angle and order from HTML fields
-    rules["angle"] = parseInt(document.getElementById("angle").value.trim(), 10);
+    let angle = parseInt(document.getElementById("angle").value.trim(), 10);
     let order = parseInt(document.getElementById("order").value.trim(), 10);
     // get the rules from HTML fields
     let ruleDivs = document.getElementsByClassName("rule");
@@ -21,12 +22,13 @@ function build(fast) {
         rules[token] = rule;
     }
 
+    // Compute the lines efficiently
+    previousLines = fcount(rules)(order);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    lsystem(rules, order, ctx, canvas.width, canvas.height, fast);
+    lsystem(rules, angle, order, ctx, canvas.width, canvas.height, fast);
 }
 
 function updateParam() {
-    console.log("test");
     if(fastlock) {
         build(true);
     }
@@ -170,6 +172,20 @@ function loadPreset(stringRules){
     let angle = rules["angle"];
     delete rules["angle"];
 
+    // Compute the lines efficiently to adjust the order
+    let order = parseInt(document.getElementById("order").value.trim(), 10);
+    let lineorder = fcount(rules);
+    let actuallines = lineorder(order);
+    if(actuallines > 4000 && actuallines > previousLines) {
+        for(let i=order-1; i > 3; i--) {
+            actuallines = lineorder(i);
+            if(actuallines <= previousLines) {
+                document.getElementById("order").value = i;
+                break;
+            }
+        }
+    }
+
     // Fill the axiom field
     let startToken = 'S';
     writeHTMLRule(startToken, rules['S']);
@@ -179,6 +195,11 @@ function loadPreset(stringRules){
 
     // Fill the angle field
     document.getElementById("angle").value = angle.toString();
+
+    // Build directly if in fastmode
+    if(fastlock) {
+        build(true);
+    }
 }
 
 function makePreset(name, rules) {

@@ -22,7 +22,7 @@ function parse(token, rules, angle, order, turtle) {
 
 let drawingTurtle;
 
-function lsystem(rules, order, ctx, canvasWidth, canvasHeight, fast) {
+function lsystem(rules, angle, order, ctx, canvasWidth, canvasHeight, fast) {
     console.log("Gathering info on: ");
     log_rules(rules, order);
     // Do a first run with a fake ctx to gather stats
@@ -44,7 +44,7 @@ function lsystem(rules, order, ctx, canvasWidth, canvasHeight, fast) {
     };
 
     // Virtual run of the rules (S is the axiom, must be in every rule set)
-    parse('S', rules, rules.angle, order, virtualTurtle);
+    parse('S', rules, angle, order, virtualTurtle);
 
     // Use the virtual run info to make sure the real drawing is centered and scaled to the canvas
     // Compute bounding box size assuming the unit is 1px
