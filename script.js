@@ -2,12 +2,10 @@ let canvas = document.getElementById("window");
 let ctx = canvas.getContext("2d");
 let tokenInRule = {};
 let ruleHasToken = {};
-let fastlock = false;
 let previousLines = 1000;
 
 //TODO: Implement a lock fast-slow and redraw upon angle/order modification
-function build(fast) {
-    fastlock = fast;
+function build(fast, rulechange=true) {
     console.log(`received build (${fast? 'fast':'slow'} mode)`);
     // TODO: BUILD RULES OBJECT FROM THE HTML RULE FIELDS AND CALL LSYSTEM
     let rules = {};
@@ -22,145 +20,32 @@ function build(fast) {
         rules[token] = rule;
     }
 
-    // Compute the lines efficiently
-    previousLines = fcount(rules)(order);
+    try {
+        // Compute the lines efficiently
+        let lineorder = fcount(rules);
+        let actualLines = lineorder(order);
+        // If the new line count is too high (due to rule change)
+        if(rulechange && actualLines > 4000 && actualLines > previousLines) {
+            // Get the line count down to a reasonable level by lowering the order
+            for(let i=order-1; i > 3; i--) {
+                actualLines = lineorder(i);
+                if(actualLines <= previousLines) {
+                    document.getElementById("order").value = i;
+                    order = i;
+                    break;
+                }
+            }
+        }
+        previousLines = actualLines;
+    } catch(err) {
+        console.log("Couldn't estimate line count (non-invertible matrix), the drawing might take a while");
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     lsystem(rules, angle, order, ctx, canvas.width, canvas.height, fast);
 }
 
 function updateParam() {
-    if(fastlock) {
-        build(true);
-    }
-}
-
-function addRef(token, englobingToken) {
-    if(token != englobingToken) {
-        if(token in tokenInRule) {
-            tokenInRule[token].add(englobingToken);
-        } else {
-            tokenInRule[token] = new Set([englobingToken]);
-        }
-
-        if(englobingToken in ruleHasToken) {
-            ruleHasToken[englobingToken].add(token);
-        } else {
-            ruleHasToken[englobingToken] = new Set([token]);
-        }
-    }
-}
-
-function removeRef(token, englobingToken) {
-    ruleHasToken[englobingToken].delete(token);
-    tokenInRule[token].delete(englobingToken);
-}
-
-function isNotRef(token) {
-    return !(token in tokenInRule) || (tokenInRule[token].size == 0);
-}
-
-function writeHTMLRule(token, rule) {
-    let textInput = document.getElementById(token);
-    if(textInput != null) {
-        textInput.value = rule.trim();
-        updateHTMLRule(token);
-    }
-}
-
-function clearHTMLRules() {
-    tokenInRule = {};
-    ruleHasToken = {};
-    let ruleDivs = document.getElementsByClassName("rule");
-    let i=0;
-    while(i<ruleDivs.length) {
-        let token = ruleDivs[i].childNodes[0].nodeValue.trim()[0];
-        if(token != 'S') {
-            removeHTMLRule(token);
-        } else {
-            i++;
-        }
-    }
-}
-
-function createHTMLRule(token) {
-    let rulesDiv = document.getElementById("rules");
-    let ruleDiv = document.createElement("div");
-    ruleDiv.className = "rule";
-    ruleDiv.innerHTML = `${token} → `;
-    let inputField = document.createElement("input");
-    inputField.setAttribute("type", "text");
-    inputField.setAttribute("name", "rule");
-    inputField.setAttribute("id", token);
-    inputField.setAttribute("oninput", `updateHTMLRule('${token}')`);
-    ruleDiv.appendChild(inputField);
-    rulesDiv.appendChild(ruleDiv);
-}
-
-function removeHTMLRule(token) {
-    if(token != 'S') {
-        // To make sure every reference is removed
-        writeHTMLRule(token, "");
-        // Remove the HTML field
-        let inputField = document.getElementById(token);
-        if(inputField != null) {
-            let ruleDiv = inputField.parentNode;
-            document.getElementById("rules").removeChild(ruleDiv);
-        }
-    }
-}
-
-function updateHTMLRule(token) {
-    let textInput = document.getElementById(token);
-    let rule = textInput.value.trim();
-    // An old list containing references in the token rule
-    let outdatedRef = new Set([]);
-    if(token in ruleHasToken) {
-        outdatedRef = refCopy(ruleHasToken[token]);
-    }
-    // Check every token of the updated rule
-    for(let i=0; i<rule.length; i++) {
-        // If token i is not terminal
-        if(!isTerminal(rule[i])) {
-            // Registers that token i is referenced in rule token
-            addRef(rule[i], token);
-            // Remove it from outdatedRef if possible
-            if(outdatedRef.has(rule[i])) {
-                outdatedRef.delete(rule[i]);
-            }
-            // Check if an Input Field deriving token i exists
-            let otherInput = document.getElementById(rule[i]);
-            if(otherInput == null) {
-                // It doesn't exist, need to create it
-                createHTMLRule(rule[i]);
-            }
-        }
-    }
-    // Every token remaining in outdatedRef is outdated, we'll remove it
-    for(let outdatedToken of outdatedRef) {
-        removeRef(outdatedToken, token);
-        // Check if the outdatedToken has at least one reference left
-        if(isNotRef(outdatedToken)) {
-            // No reference left, we remove the HTML field
-            removeHTMLRule(outdatedToken);
-        }
-    }
-}
-
-function recursiveHTMLRuleWritting(ruleSet, previousToken) {
-    // If there's still rules to be written
-    if(Object.keys(ruleSet).length > 0) {
-        // for each references created by the previousToken
-        for(ref of ruleHasToken[previousToken]) {
-            if(ref in ruleSet) {
-                // Fill in the HTML field
-                writeHTMLRule(ref, ruleSet[ref]);
-                // Delete it from the ruleSet so we don't fill it again
-                delete ruleSet[ref];
-                // Add all of his new references to the HTML
-                recursiveHTMLRuleWritting(ruleSet, ref);
-            }
-        }
-    }
+    build(true, false);
 }
 
 function loadPreset(stringRules){
@@ -172,23 +57,9 @@ function loadPreset(stringRules){
     let angle = rules["angle"];
     delete rules["angle"];
 
-    // Compute the lines efficiently to adjust the order
-    let order = parseInt(document.getElementById("order").value.trim(), 10);
-    let lineorder = fcount(rules);
-    let actuallines = lineorder(order);
-    if(actuallines > 4000 && actuallines > previousLines) {
-        for(let i=order-1; i > 3; i--) {
-            actuallines = lineorder(i);
-            if(actuallines <= previousLines) {
-                document.getElementById("order").value = i;
-                break;
-            }
-        }
-    }
-
     // Fill the axiom field
     let startToken = 'S';
-    writeHTMLRule(startToken, rules['S']);
+    writeHTMLRule(startToken, rules['S'], true);
     delete rules['S'];
     // Fill all the subsequent HTML fields
     recursiveHTMLRuleWritting(rules, startToken)
@@ -196,10 +67,8 @@ function loadPreset(stringRules){
     // Fill the angle field
     document.getElementById("angle").value = angle.toString();
 
-    // Build directly if in fastmode
-    if(fastlock) {
-        build(true);
-    }
+    // Build directly in fastmode
+    build(true);
 }
 
 function makePreset(name, rules) {

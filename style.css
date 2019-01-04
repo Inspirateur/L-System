@@ -60,18 +60,6 @@ button:focus {
     outline: none;
 }
 
-#fast {
-    background-color: #012508;
-}
-
-#fast:hover:enabled {
-    background-color: #01450F;
-}
-
-#fast:active:enabled {
-    background-color: #012508;
-}
-
 #slow {
     background-color: #402508;
 }

@@ -24,7 +24,7 @@ let drawingTurtle;
 
 function lsystem(rules, angle, order, ctx, canvasWidth, canvasHeight, fast) {
     console.log("Gathering info on: ");
-    log_rules(rules, order);
+    log_rules(rules, angle, order);
     // Do a first run with a fake ctx to gather stats
     let virtualCtx = new VirtualCtx();
     let virtualTurtle = new Turtle(0, 0, 1, virtualCtx);

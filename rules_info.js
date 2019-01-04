@@ -2,7 +2,7 @@ function is_forward(token, rules, route="") {
     for(let i=0; i<rules[token].length; i++) {
         if(rules[token][i] == "f") {
             return true;
-        } else if(rules[token][i] != "+" && rules[token][i] != "-" && rules[token][i] != token && route.indexOf(rules[token][i]) > -1) {
+        } else if(rules[token][i] != "+" && rules[token][i] != "-" && rules[token][i] != token && route.indexOf(rules[token][i]) == -1) {
             if(is_forward(rules[token][i], rules, route+rules[token][i])) {
                 return true;
             }
@@ -11,13 +11,23 @@ function is_forward(token, rules, route="") {
     return false;
 }
 
-// Build a copy of the rules without the rules that take no forward
+// Build a copy of the rules without the rules that make no forward action
 function pureCopy(rules) {
     let pureRules = {};
     pureRules['S'] = rules['S'];
-    for(key in rules) {
+    let banned = [];
+    // Only add rules that make forward action or call forward rules
+    for(let key in rules) {
         if(is_forward(key, rules)) {
             pureRules[key] = rules[key];
+        } else {
+            banned.push(key);
+        }
+    }
+    // Remove references of non forward rules in the forward rules
+    for(let i=0; i<banned.length; i++) {
+        for(let key in pureRules) {
+            pureRules[key] = pureRules[key].split(banned[i]).join('');
         }
     }
     return pureRules;

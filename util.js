@@ -22,13 +22,13 @@ function hslToRgb(h, s, l) {
     return `rgb(${r * 255}, ${g * 255}, ${b * 255})`;
 }
 
-function log_rules(rules, order) {
+function log_rules(rules, angle, order) {
     for(let key in rules) {
         if(key != "angle") {
             console.log(`${key} -> ${rules[key]}`);
         }
     }
-    console.log(`Angle: ${rules.angle} | Order: ${order}`);
+    console.log(`Angle: ${angle} | Order: ${order}`);
 }
 
 function rule2HTML(rules) {
