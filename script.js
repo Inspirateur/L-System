@@ -49,6 +49,14 @@ function build(fast, rulechange=true) {
 }
 
 function updateParam() {
+    let angle = parseInt(document.getElementById("angle").value.trim(), 10);
+    let order = parseInt(document.getElementById("order").value.trim(), 10);
+    angle = angle%360;
+    if(order < 0) {
+        order = 0;
+    }
+    document.getElementById("angle").value = angle;
+    document.getElementById("order").value = order;
     build(true, false);
 }
 
