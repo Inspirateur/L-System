@@ -36,6 +36,10 @@ function build(fast, rulechange=true) {
                 }
             }
         }
+        if(actualLines > previousLines) {
+            document.getElementById("order").value = 3;
+            order = 3;
+        }
         previousLines = actualLines;
     } catch(err) {
         console.log("Couldn't estimate line count (non-invertible matrix), the drawing might take a while");
