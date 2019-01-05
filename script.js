@@ -52,6 +52,9 @@ function updateParam() {
     let angle = parseInt(document.getElementById("angle").value.trim(), 10);
     let order = parseInt(document.getElementById("order").value.trim(), 10);
     angle = angle%360;
+    if(angle < 0) {
+        angle += 360;
+    }
     if(order < 0) {
         order = 0;
     }
