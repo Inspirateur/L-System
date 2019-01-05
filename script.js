@@ -36,7 +36,7 @@ function build(fast, rulechange=true) {
                 }
             }
         }
-        if(actualLines > previousLines) {
+        if(rulechange && actualLines > previousLines) {
             document.getElementById("order").value = 3;
             order = 3;
         }
