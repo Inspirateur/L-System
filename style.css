@@ -1,29 +1,39 @@
 body {
     font-family: sans-serif;
-    background-color: #070B0F;
-    color: #9AA;
+    background-color: #15151B;
+    color: #BBB;
+    cursor: default;
 }
 
 h3 {
     margin-top: 0;
-    color: #BCC;
+    color: #CCC;
 }
 
 h4 {
     margin-top: 10px;
     margin-bottom: 10px;
-    color: #ABB;
+    color: #BCC;
 }
 
 input {
     border-radius: 5px;
     border-width: 1px;
     border-color: #0A0F14;
-    background-color: #080D10;
+    background-color: #121218;
+    margin-bottom: 4px;
 }
 
 input[type="number"] {
     width: 50px;
+    height: 25px;
+    padding-left: 5px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    height: 25px;
+    width: 35px;
 }
 
 input[name="angle"] {
@@ -32,7 +42,6 @@ input[name="angle"] {
 
 input, select, textarea {
     color: #CDD;
-
 }
 
 input:focus {
@@ -78,12 +87,12 @@ button:focus {
     margin-right: 1em;
     margin-bottom: 1em;
     border-radius: 5px;
-    background-color: #06090B;
+    background-color: #0F1016;
 }
 
 .sub {
     border-radius: 5px;
-    background-color: #090E12;
+    background-color: #202028;
     padding: 5px;
 }
 
@@ -108,7 +117,7 @@ button:focus {
 }
 
 .preset {
-    background-color: #0A1015;
+    background-color: #28282F;
     border-radius: 5px;
     padding-left: 5px;
     padding-right: 5px;
