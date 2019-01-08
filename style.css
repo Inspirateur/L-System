@@ -2,6 +2,7 @@ body {
     font-family: monospace;
     background-color: #15151B;
     color: #BBB;
+    font-size: 1.5em;
     cursor: default;
 }
 
@@ -17,11 +18,14 @@ h4 {
 }
 
 input {
+    height: 25px;
+    font-size: 20px;
     border-radius: 5px;
     border-width: 1px;
     border-color: #0A0F14;
     background-color: #121218;
     margin-bottom: 4px;
+    padding-left: 4px;
 }
 
 input[type="number"] {
@@ -32,12 +36,13 @@ input[type="number"] {
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-    height: 25px;
+    height: 27px;
     width: 35px;
 }
 
 input[name="angle"] {
     margin-right: 1em;
+    width: 67px;
 }
 
 input, select, textarea {
