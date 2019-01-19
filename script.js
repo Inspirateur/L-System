@@ -104,7 +104,7 @@ function makePresets(){
         "dragon": {'S': "fX", 'X': "X+Yf+", 'Y': "-fX-Y", "angle": 90},
         "hillbert": {'S': "L", 'L': "+Rf-LfL-fR+", 'R': "-Lf+RfR+fL-", "angle": 90},
         "sierpinski": {'S': "ZYf", 'X': "Yf+Xf+Y", 'Y': "Xf-Yf-X", 'Z': "+W", 'W': "-Z", "angle": 60},
-        "koch": {'S': 'X--X--X--', 'X': 'Xf+Xf--fX+fX', "angle": 60}
+        "koch": {'S': 'X--X--X', 'X': 'Xf+Xf--fX+fX', "angle": 60}
     }
 
     let presetlist = document.getElementById("presetlist");
