@@ -7,17 +7,22 @@ body {
 }
 
 h3 {
+    font-family: sans-serif;
+    font-size: 1em;
     margin-top: 0;
     color: #CCC;
 }
 
 h4 {
+    font-family: sans-serif;
+    font-size: 0.8em;
     margin-top: 10px;
     margin-bottom: 10px;
     color: #BCC;
 }
 
 input {
+    font-family: monospace;
     height: 25px;
     font-size: 20px;
     border-radius: 5px;
@@ -29,7 +34,7 @@ input {
 }
 
 input[type="number"] {
-    width: 50px;
+    width: 48px;
     height: 25px;
     padding-left: 5px;
 }
@@ -37,12 +42,12 @@ input[type="number"] {
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     height: 27px;
-    width: 35px;
+    width: 40px;
 }
 
 input[name="angle"] {
     margin-right: 1em;
-    width: 67px;
+    width: 58px;
 }
 
 input, select, textarea {
@@ -75,15 +80,16 @@ button:focus {
 }
 
 #slow {
-    background-color: #402508;
+    background-color: #704508;
+    font-size: 0.8em;
 }
 
 #slow:hover:enabled {
-    background-color: #60450F;
+    background-color: #90650F;
 }
 
 #slow:active:enabled {
-    background-color: #402508;
+    background-color: #503508;
 }
 
 #window {
@@ -105,6 +111,7 @@ button:focus {
     display: inline-block;
     vertical-align: text-top;
     margin-right: 1em;
+    padding-left: 10px;
 }
 
 #rules{
@@ -130,7 +137,7 @@ button:focus {
 
 .preset:hover {
     cursor: pointer;
-    background-color: #0B1519;
+    background-color: #38383F;
 }
 
 .preset:hover h4 {
